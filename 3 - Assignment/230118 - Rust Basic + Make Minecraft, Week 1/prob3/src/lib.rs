@@ -31,19 +31,21 @@ fn calculate(minefield: &[&str], (row, col): (usize, usize)) -> i32 {
         let row_vec = row_vecs[i];
         let col_vec = col_vecs[i];
 
-        let target_row = (row as i32 + row_vec) as usize;
-        let target_col = (col as i32 + col_vec) as usize;
+        let target_row = row as i32 + row_vec;
+        let target_col = col as i32 + col_vec;
 
-        if target_row < 0 || target_col < 0 || target_row >= row_size || target_col >= col_size {
+        if target_row < 0 || target_col < 0 {
+          continue;
+        }
+
+        let valid_row = target_row as usize;
+        let valid_col = target_col as usize;
+
+        if valid_row >= row_size || valid_col >= col_size {
             continue;
         }
 
-        // println!("{:?}", minefield);
-        // println!("{:?}", minefield[target_row].chars());
-        // println!("{:?} {} {}", minefield[target_row].chars().nth(target_col).unwrap(), target_row, target_col);
-
-
-        if minefield[target_row].chars().nth(target_col).unwrap() == '*' {
+        if minefield[valid_row].chars().nth(valid_col).unwrap() == '*' {
             mine_no += 1;
         }
     }
