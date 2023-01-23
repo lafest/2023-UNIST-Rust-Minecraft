@@ -21,7 +21,7 @@ fn calculate(minefield: &[&str], (row, col): (usize, usize)) -> i32 {
     println!("{} {}", row, col);
 
     let row_vecs: [i32; 8] = [-1, -1, -1, 0, 0, 1, 1, 1];
-    let col_vecs: [i32; 8] = [-1, 0, 1, -1, 1, -1, 0, 1]; // usize vs i32 (자동 타입 추적이 usize로 인식)
+    let col_vecs: [i32; 8] = [-1, 0, 1, -1, 1, -1, 0, 1];
 
     let row_size = minefield.len();
     let col_size = minefield[0].len();
