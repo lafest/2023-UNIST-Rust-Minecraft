@@ -1,5 +1,54 @@
 pub fn annotate(minefield: &[&str]) -> Vec<String> {
-    unimplemented!("\nAnnotate each square of the given minefield with the number of mines that surround said square (blank if there are no surrounding mines):\n{:#?}\n", minefield);
+    minefield.iter().enumerate().map(|(row_index, row)| {
+        row.chars().enumerate().map(|(col_index, _)| {
+            mine_num_to_annotation(calculate(minefield, (row_index, col_index)))
+        }).collect::<Vec<String>>().join("")
+    }).collect::<Vec<String>>()
+}
+
+fn mine_num_to_annotation(mine_no: i32) -> String {
+    match mine_no {
+        -1 => return '*'.to_string(),
+        0 => return ' '.to_string(),
+        mathched_num => return mathched_num.to_string(),
+    }
+}
+
+fn calculate(minefield: &[&str], (row, col): (usize, usize)) -> i32 {
+    if minefield[row].chars().nth(col).unwrap() == '*' {
+        return -1;
+    }
+    println!("{} {}", row, col);
+
+    let row_vecs: [i32; 8] = [-1, -1, -1, 0, 0, 1, 1, 1];
+    let col_vecs: [i32; 8] = [-1, 0, 1, -1, 1, -1, 0, 1]; // usize vs i32 (자동 타입 추적이 usize로 인식)
+
+    let row_size = minefield.len();
+    let col_size = minefield[0].len();
+
+    let mut mine_no = 0;
+    for i in 0..row_vecs.len() {
+        let row_vec = row_vecs[i];
+        let col_vec = col_vecs[i];
+
+        let target_row = (row as i32 + row_vec) as usize;
+        let target_col = (col as i32 + col_vec) as usize;
+
+        if target_row < 0 || target_col < 0 || target_row >= row_size || target_col >= col_size {
+            continue;
+        }
+
+        // println!("{:?}", minefield);
+        // println!("{:?}", minefield[target_row].chars());
+        // println!("{:?} {} {}", minefield[target_row].chars().nth(target_col).unwrap(), target_row, target_col);
+
+
+        if minefield[target_row].chars().nth(target_col).unwrap() == '*' {
+            mine_no += 1;
+        }
+    }
+
+    mine_no
 }
 
 #[cfg(test)]
