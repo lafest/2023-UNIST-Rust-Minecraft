@@ -17,8 +17,8 @@ pub fn evaluate(inputs: &[CalculatorInput]) -> Option<i32> {
             return None
           }
 
-          let a = stack.pop().unwrap();
           let b = stack.pop().unwrap();
+          let a = stack.pop().unwrap();
           stack.push(a + b)
         }
         CalculatorInput::Subtract => {
@@ -26,8 +26,8 @@ pub fn evaluate(inputs: &[CalculatorInput]) -> Option<i32> {
             return None
           }
 
-          let a = stack.pop().unwrap();
           let b = stack.pop().unwrap();
+          let a = stack.pop().unwrap();
           stack.push(a - b)
         }
         CalculatorInput::Multiply => {
@@ -35,8 +35,8 @@ pub fn evaluate(inputs: &[CalculatorInput]) -> Option<i32> {
             return None
           }
 
-          let a = stack.pop().unwrap();
           let b = stack.pop().unwrap();
+          let a = stack.pop().unwrap();
           stack.push(a * b)
         }
         CalculatorInput::Divide => {
@@ -44,8 +44,8 @@ pub fn evaluate(inputs: &[CalculatorInput]) -> Option<i32> {
             return None
           }
 
-          let a = stack.pop().unwrap();
           let b = stack.pop().unwrap();
+          let a = stack.pop().unwrap();
           stack.push(a / b)
         }
         CalculatorInput::Value(value) => {
