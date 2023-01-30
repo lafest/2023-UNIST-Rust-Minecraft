@@ -1,8 +1,50 @@
 use std::collections::HashMap;
 
+fn calculate(word: &str, hash_map: &mut HashMap<String, u32>) {
+    let calculated_word = get_valid_word(word);
+    if calculated_word == "" {
+        return;
+    }
+    println!("{:?}", calculated_word);
+    let cnt = hash_map.entry(calculated_word).or_insert(0);
+    *cnt += 1;
+}
+
+fn get_valid_word(word: &str) -> String {
+    word.chars()
+        .enumerate()
+        .filter(|(i, x)| is_valid_char(i, x, word))
+        .map(|(_, x)| x)
+        .collect::<String>()
+        .to_lowercase()
+}
+
+fn is_valid_char(i: &usize, x: &char, word: &str) -> bool {
+    if x.is_ascii_alphanumeric() {
+        return true;
+    }
+
+    if word.chars().collect::<Vec<char>>()[i.saturating_sub(1)].is_alphanumeric()
+        && word.chars().collect::<Vec<char>>()[if word.len() == i + 1 {
+            word.len() - 1
+        } else {
+            i + 1
+        }]
+        .is_alphanumeric()
+    {
+        return true;
+    }
+
+    false
+}
+
 /// Count occurrences of words.
 pub fn word_count(words: &str) -> HashMap<String, u32> {
-    unimplemented!("Count of occurrences of words in {:?}", words);
+    let mut hash_map: HashMap<String, u32> = HashMap::new();
+    words
+        .split(|c: char| c != '\'' && (c.is_ascii_whitespace() || c.is_ascii_punctuation()))
+        .for_each(|word| calculate(word, &mut hash_map));
+    hash_map
 }
 
 #[cfg(test)]
