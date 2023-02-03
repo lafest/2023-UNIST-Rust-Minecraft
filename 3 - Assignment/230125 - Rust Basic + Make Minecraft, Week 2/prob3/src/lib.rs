@@ -1,13 +1,12 @@
-use std::marker::PhantomData;
+use std::mem;
 #[cfg(test)]
 use std::rc::Rc;
 
 pub struct CircularBuffer<T> {
-    // This field is here to make the template compile and not to
-    // complain about unused type parameter 'T'. Once you start
-    // solving the exercise, delete this field and the 'std::marker::PhantomData'
-    // import.
-    field: PhantomData<T>,
+    field: Vec<Option<T>>,
+    read_index: usize,
+    write_index: usize,
+    filled: usize
 }
 
 #[derive(Debug, PartialEq)]
@@ -18,21 +17,40 @@ pub enum Error {
 
 impl<T> CircularBuffer<T> {
     pub fn new(capacity: usize) -> Self {
-        unimplemented!(
-            "Construct a new CircularBuffer with the capacity to hold {}.",
-            match capacity {
-                1 => "1 element".to_string(),
-                _ => format!("{} elements", capacity),
-            }
-        );
+        let mut vec: Vec<Option<T>> = vec![];
+        for _ in 0..capacity { vec.push(None) }
+        return CircularBuffer {
+          field: vec,
+          read_index: 0,
+          write_index: 0,
+          filled: 0
+        };
     }
 
     pub fn write(&mut self, _element: T) -> Result<(), Error> {
-        unimplemented!("Write the passed element to the CircularBuffer or return FullBuffer error if CircularBuffer is full.");
+      match self.filled == self.field.len() {
+        true => Err(Error::FullBuffer),
+        false => {
+          self.field[self.write_index] = Some(_element);
+          self.write_index = (self.write_index + 1) % self.field.len();
+          self.filled += 1;
+          Ok(())
+        },
+      }
     }
 
     pub fn read(&mut self) -> Result<T, Error> {
-        unimplemented!("Read the oldest element from the CircularBuffer or return EmptyBuffer error if CircularBuffer is empty.");
+      match self.filled == 0 {
+        false => {
+          self.filled -= 1;
+          self.read_index = (self.read_index + 1 + self.field.len()) % self.field.len();
+          match mem::replace(&mut self.field[self.read_index], None) {
+            None => Err(Error::EmptyBuffer),
+            Some(v) => Ok(v)
+          }
+        },
+        true => Err(Error::EmptyBuffer)
+      }
     }
 
     pub fn clear(&mut self) {
