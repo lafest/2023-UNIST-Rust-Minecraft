@@ -1,4 +1,4 @@
-use std::iter::FromIterator;
+use std::{iter::FromIterator, mem};
 
 pub struct SimpleLinkedList<T> {
     head: Option<Box<Node<T>>>
@@ -58,7 +58,45 @@ impl<T> SimpleLinkedList<T> {
     }
 
     pub fn pop(&mut self) -> Option<T> {
-        unimplemented!()
+      if self.is_empty() {
+        return None
+      }
+
+      if self.len() == 1 {
+        return match mem::replace(&mut self.head, None) {
+          None => None,
+          Some(node) => Some(node.value)
+        } 
+      }
+
+
+      let mut current_node = &mut self.head;
+      let mut ret: Option<T> = Default::default();
+
+      while current_node.is_some() {
+        match current_node {
+            None => break,
+            Some(valid_current_node) => {
+              match &mut valid_current_node.next {
+                None => break,
+                Some(valid_next_node) => {
+                  if valid_next_node.next.is_some() {
+                    current_node = &mut valid_current_node.next;
+                  } else {
+                    ret = match mem::replace(&mut valid_current_node.next, None) {
+                      None => None,
+                      Some(v) => Some(v.value)
+                    };
+                    valid_current_node.next = None;
+                    break
+                  }
+                }
+              }
+            },
+        }
+      }
+
+      ret
     }
 
     pub fn peek(&self) -> Option<&T> {
