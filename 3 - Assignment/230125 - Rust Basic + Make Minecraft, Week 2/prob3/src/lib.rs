@@ -43,11 +43,12 @@ impl<T> CircularBuffer<T> {
       match self.filled == 0 {
         false => {
           self.filled -= 1;
-          self.read_index = (self.read_index + 1 + self.field.len()) % self.field.len();
-          match mem::replace(&mut self.field[self.read_index], None) {
+          let ret = match mem::replace(&mut self.field[self.read_index], None) {
             None => Err(Error::EmptyBuffer),
             Some(v) => Ok(v)
-          }
+          };
+          self.read_index = (self.read_index + 1 + self.field.len()) % self.field.len();
+          ret
         },
         true => Err(Error::EmptyBuffer)
       }
