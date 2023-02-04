@@ -134,7 +134,21 @@ impl<T> FromIterator<T> for SimpleLinkedList<T> {
 
 impl<T> From<SimpleLinkedList<T>> for Vec<T> {
     fn from(mut _linked_list: SimpleLinkedList<T>) -> Vec<T> {
-        unimplemented!()
+        let mut vec: Vec<T> = vec![];
+
+        while !_linked_list.is_empty() {
+          match _linked_list.pop() {
+            None => None::<T>,
+            Some(v) => {
+              vec.push(v);
+              None
+            }
+          };
+        }
+
+        vec.reverse();
+
+        vec
     }
 }
 
