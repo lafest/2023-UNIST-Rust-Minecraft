@@ -60,7 +60,15 @@ impl<T> CircularBuffer<T> {
     }
 
     pub fn overwrite(&mut self, _element: T) {
-        unimplemented!("Write the passed element to the CircularBuffer, overwriting the existing elements if CircularBuffer is full.");
+        if self.filled == self.field.len() {
+          self.read_index = (self.read_index + 1 + self.field.len()) % self.field.len();
+          mem::replace(&mut self.field[self.write_index], Some(_element));
+          self.write_index = (self.write_index + 1 + self.field.len()) % self.field.len();
+        } else {
+          self.field[self.write_index] = Some(_element);
+          self.write_index = (self.write_index + 1) % self.field.len();
+          self.filled += 1;
+        }
     }
 }
 
