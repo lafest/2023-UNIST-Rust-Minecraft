@@ -1,6 +1,15 @@
 mod linked_list;
 
-pub struct LinkedList<T>(std::marker::PhantomData<T>);
+pub struct LinkedList<T> {
+  head: Option<Box<Node<T>>>,
+  tail: Option<Box<Node<T>>>,
+}
+
+pub struct Node<T> {
+  value: T,
+  next: Option<Box<Node<T>>>,
+  prev: Option<Box<Node<T>>>,
+}
 
 pub struct Cursor<'a, T>(std::marker::PhantomData<&'a mut T>);
 
@@ -8,7 +17,7 @@ pub struct Iter<'a, T>(std::marker::PhantomData<&'a T>);
 
 impl<T> LinkedList<T> {
     pub fn new() -> Self {
-        unimplemented!()
+        LinkedList { head: None, tail: None }
     }
 
     // You may be wondering why it's necessary to have is_empty()
@@ -17,11 +26,23 @@ impl<T> LinkedList<T> {
     // whereas is_empty() is almost always cheap.
     // (Also ask yourself whether len() is expensive for LinkedList)
     pub fn is_empty(&self) -> bool {
-        unimplemented!()
+        self.head.is_none() && self.tail.is_none()
     }
 
     pub fn len(&self) -> usize {
-        unimplemented!()
+        let mut length = 0;
+        let mut current_node = &self.head;
+        while current_node.is_some() {
+          match current_node {
+            None => break,
+            Some(valid_current_node) => {
+              current_node = &valid_current_node.next;
+              length += 1;
+            }
+          }
+        }
+
+        length
     }
 
     /// Return a cursor positioned on the front element
