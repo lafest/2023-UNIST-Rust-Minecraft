@@ -54,7 +54,8 @@ impl<T> CircularBuffer<T> {
     }
 
     pub fn clear(&mut self) {
-        unimplemented!("Clear the CircularBuffer.");
+      let a = CircularBuffer::new(self.field.len());
+      *self = a
     }
 
     pub fn overwrite(&mut self, _element: T) {
