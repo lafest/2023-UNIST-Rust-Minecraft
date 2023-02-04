@@ -28,7 +28,7 @@ impl<T> SimpleLinkedList<T> {
     pub fn len(&self) -> usize {
       let mut length = 0;
       let mut current_node = &self.head;
-      while current_node.is_none() {
+      while current_node.is_some() {
         match current_node {
           None => break,
           Some(v) => {
