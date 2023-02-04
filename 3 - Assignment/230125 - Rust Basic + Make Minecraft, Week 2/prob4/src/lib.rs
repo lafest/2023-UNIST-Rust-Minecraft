@@ -111,7 +111,13 @@ impl<T> SimpleLinkedList<T> {
 
 impl<T> FromIterator<T> for SimpleLinkedList<T> {
     fn from_iter<I: IntoIterator<Item = T>>(_iter: I) -> Self {
-        unimplemented!()
+        let mut simple_linked_list: SimpleLinkedList<T> = SimpleLinkedList::new();
+
+        for v in _iter {
+          simple_linked_list.push(v)
+        }
+
+        simple_linked_list
     }
 }
 
