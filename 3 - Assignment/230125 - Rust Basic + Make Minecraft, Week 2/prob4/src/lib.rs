@@ -100,7 +100,25 @@ impl<T> SimpleLinkedList<T> {
     }
 
     pub fn peek(&self) -> Option<&T> {
-        unimplemented!()
+      let mut current_node = &self.head;
+
+      while current_node.is_some() {
+        match current_node {
+          None => break,
+          Some(valid_current_node) => {
+            if valid_current_node.next.is_some() {
+              current_node = &valid_current_node.next
+            } else {
+              break
+            }
+          }
+        }
+      }
+
+      match current_node {
+        None => None,
+        Some(v) => Some(&v.value)
+      }
     }
 
     #[must_use]
