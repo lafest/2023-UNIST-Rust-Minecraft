@@ -105,7 +105,9 @@ impl<T> SimpleLinkedList<T> {
 
     #[must_use]
     pub fn rev(self) -> SimpleLinkedList<T> {
-        unimplemented!()
+        let mut vec: Vec<T> = self.into();
+        vec.reverse();
+        vec.drain(..).collect()
     }
 }
 
